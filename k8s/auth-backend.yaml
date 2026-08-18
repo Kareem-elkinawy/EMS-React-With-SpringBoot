@@ -18,12 +18,26 @@ spec:
           image: emsdevopsacr.azurecr.io/ems-auth-backend:latest
           ports:
             - containerPort: 5001
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5001
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5001
+            initialDelaySeconds: 20
+            periodSeconds: 20
           env:
             - name: MONGO_DB_URL
               valueFrom:
                 secretKeyRef:
                   name: mongodb-secret
                   key: MONGODB_URI
+
 ---
 apiVersion: v1
 kind: Service
