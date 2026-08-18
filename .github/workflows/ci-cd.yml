@@ -49,6 +49,17 @@ jobs:
     name: Employee - Build & Test
     runs-on: ubuntu-latest
 
+    services:
+      mongodb:
+        image: mongo:8
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.adminCommand({ ping: 1 })'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     defaults:
       run:
         working-directory: employee
@@ -68,8 +79,9 @@ jobs:
         run: chmod +x mvnw
 
       - name: Build & Test
+        env:
+          MONGODB_URI: mongodb://localhost:27017/EMS
         run: ./mvnw clean verify
-
 
   # =========================
   # 3. Auth Backend CI

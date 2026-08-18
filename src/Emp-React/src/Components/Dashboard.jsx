@@ -1,12 +1,11 @@
 // Components/Dashboard.jsx
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import EmployeeList from './EmployeeList';
 import EmployeeForm from './EmployeeForm';
 import EmployeeDetail from './EmployeeDetail';
 import PrimarySearchAppBar from './PrimarySearchAppBar';
 
-const EMPLOYEE_API_URL = import.meta.env.VITE_EMPLOYEE_API_URL;
 
 const Dashboard = ({setLogin,Login}) => {
   const [employees, setEmployees] = useState([]);

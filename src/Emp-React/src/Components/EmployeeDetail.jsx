@@ -1,5 +1,4 @@
 // Components/EmployeeDetail.jsx
-import React from 'react';
 
 const EmployeeDetail = ({ employee }) => {
   return (

@@ -15,10 +15,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import Button from '@mui/joy/Button';
-import { set } from 'mongoose';
-import { Navigate, useNavigate } from 'react-router-dom';
-// import { set } from 'mongoose';
+import { useNavigate } from 'react-router-dom';
 
 // const Search = styled('div')(({ theme }) => ({
 //   position: 'relative',
