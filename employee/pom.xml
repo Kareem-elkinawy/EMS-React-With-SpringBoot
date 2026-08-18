@@ -18,6 +18,12 @@
         <spring-ai.version>1.0.0-M1</spring-ai.version>
     </properties>
     <dependencies>
+
+	<dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-actuator</artifactId>
+	</dependency>
+
         <!-- MongoDB Starter -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

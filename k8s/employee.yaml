@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: employee
+  namespace: ems
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: employee
+  template:
+    metadata:
+      labels:
+        app: employee
+    spec:
+      containers:
+        - name: employee
+          image: emsdevopsacr.azurecr.io/ems-employee:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MONGODB_URI
+              value: "mongodb://mongodb:27017/EMS"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: employee
+  namespace: ems
+spec:
+  selector:
+    app: employee
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: ClusterIP

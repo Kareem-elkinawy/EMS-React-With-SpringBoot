@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-backend
+  namespace: ems
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-backend
+  template:
+    metadata:
+      labels:
+        app: auth-backend
+    spec:
+      containers:
+        - name: auth-backend
+          image: emsdevopsacr.azurecr.io/ems-auth-backend:latest
+          ports:
+            - containerPort: 5001
+          env:
+            - name: MONGO_DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: MONGODB_URI
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-backend
+  namespace: ems
+spec:
+  selector:
+    app: auth-backend
+  ports:
+    - port: 5001
+      targetPort: 5001
+  type: ClusterIP

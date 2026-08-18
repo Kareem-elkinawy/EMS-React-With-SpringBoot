@@ -48,11 +48,11 @@ export default function SignIn({Login, setLogin}) {
     try {
       if (createAccount) {
         // Create account
-        const response = await axios.post('http://localhost:5001/register', { email, password });
+        const response = await axios.post(`${import.meta.env.VITE_AUTH_API_URL}/register`, { email, password });
         console.log('User registered:', response.data);
       } else {
         // Login
-        const response = await axios.post('http://localhost:5001/login', { email, password });
+        const response = await axios.post(`${import.meta.env.VITE_AUTH_API_URL}/login`, { email, password });
         console.log('User logged in:', response.data);
         setLogin(true);
        

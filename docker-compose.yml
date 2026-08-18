@@ -1,0 +1,58 @@
+services:
+
+  mongodb:
+    image: mongo:8
+    container_name: ems-mongodb
+    restart: unless-stopped
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - ems-network
+
+  employee:
+    build:
+      context: ./employee
+    container_name: ems-employee
+    restart: unless-stopped
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017/EMS
+    depends_on:
+      - mongodb
+    ports:
+      - "8080:8080"
+    networks:
+      - ems-network
+
+  auth-backend:
+    build:
+      context: ./Backend
+    container_name: ems-auth
+    restart: unless-stopped
+    environment:
+      MONGO_DB_URL: mongodb://mongodb:27017/EMS
+    depends_on:
+      - mongodb
+    ports:
+      - "5001:5001"
+    networks:
+      - ems-network
+
+  frontend:
+    build:
+      context: ./src/Emp-React
+    container_name: ems-frontend
+    restart: unless-stopped
+    depends_on:
+      - employee
+      - auth-backend
+    ports:
+      - "80:80"
+    networks:
+      - ems-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  ems-network:
+    driver: bridge

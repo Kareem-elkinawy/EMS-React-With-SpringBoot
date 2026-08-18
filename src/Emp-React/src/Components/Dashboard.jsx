@@ -6,6 +6,8 @@ import EmployeeForm from './EmployeeForm';
 import EmployeeDetail from './EmployeeDetail';
 import PrimarySearchAppBar from './PrimarySearchAppBar';
 
+const EMPLOYEE_API_URL = import.meta.env.VITE_EMPLOYEE_API_URL;
+
 const Dashboard = ({setLogin,Login}) => {
   const [employees, setEmployees] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
@@ -17,7 +19,7 @@ const Dashboard = ({setLogin,Login}) => {
 
   const fetchEmployees = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/ems/EmployeeDetail');
+      const response = await axios.get(`${import.meta.env.VITE_EMPLOYEE_API_URL}/ems/EmployeeDetail`);
       setEmployees(response.data);
     } catch (error) {
       console.error('Error fetching employees:', error.response ? error.response.data : error.message);
@@ -31,9 +33,9 @@ const Dashboard = ({setLogin,Login}) => {
   const handleAddOrUpdateEmployee = async (employee) => {
     try {
       if (isEditing) {
-        await axios.put(`http://localhost:8080/ems/UpdateEmployee/${employee.id}`, employee);
+        await axios.put(`${import.meta.env.VITE_EMPLOYEE_API_URL}/ems/UpdateEmployee/${employee.id}`, employee);
       } else {
-        await axios.post('http://localhost:8080/ems/AddEmployee', employee);
+        await axios.post(`${import.meta.env.VITE_EMPLOYEE_API_URL}/ems/AddEmployee`, employee);
       }
       fetchEmployees();
       setIsEditing(false);
@@ -45,7 +47,7 @@ const Dashboard = ({setLogin,Login}) => {
 
   const handleDeleteEmployee = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/ems/DeleteEmployee/${id}`);
+      await axios.delete(`${import.meta.env.VITE_EMPLOYEE_API_URL}/ems/DeleteEmployee/${id}`);
       fetchEmployees();
     } catch (error) {
       console.error('Error deleting employee:', error.response ? error.response.data : error.message);

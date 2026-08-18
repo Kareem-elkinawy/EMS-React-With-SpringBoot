@@ -32,6 +32,28 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
+app.get('/health', async (req, res) => {
+  try {
+    const mongoState = mongoose.connection.readyState;
+
+    if (mongoState !== 1) {
+      return res.status(503).json({
+        status: 'DOWN',
+        mongodb: 'disconnected'
+      });
+    }
+
+    res.status(200).json({
+      status: 'UP',
+      mongodb: 'connected'
+    });
+  } catch (error) {
+    res.status(503).json({
+      status: 'DOWN'
+    });
+  }
+});
+
 // User registration endpoint
 app.post('/register', async (req, res) => {
   const { email, password } = req.body;

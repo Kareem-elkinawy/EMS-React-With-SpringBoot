@@ -49,7 +49,7 @@ export default function ResetPassword() {
     }
 
     try {
-      const response = await axios.post('http://localhost:5001/reset-password', { email, newPassword });
+      const response = await axios.post(`${import.meta.env.VITE_AUTH_API_URL}/reset-password`, { email, newPassword });
       console.log('Password reset successful:', response.data);
       setShowSnackbar(true);
       setTimeout(() => navigate('/'), 3000); // Redirect to sign-in page after successful password reset

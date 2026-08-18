@@ -1,96 +1,69 @@
-# Logs
-logs
-*.log
+# ================================
+# Environment / Secrets
+# ================================
+.env
+.env.*
+!.env.example
+
+# ================================
+# Node.js
+# ================================
+node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Build output
+dist/
+dist-ssr/
+build/
 
-# Editor directories and files
-.vscode/*
+# ================================
+# Java / Maven / Gradle
+# ================================
+target/
+.gradle/
+
+# ================================
+# Logs / Temporary files
+# ================================
+logs/
+*.log
+*.tmp
+*.bak
+*.swp
+
+# ================================
+# IDEs
+# ================================
+.idea/
+.vscode/
 !.vscode/extensions.json
-.idea
+
+.classpath
+.project
+.settings/
+.factorypath
+.apt_generated/
+.springBeans
+.sts4-cache/
+.metadata/
+
+# ================================
+# OS
+# ================================
 .DS_Store
+
+# ================================
+# Misc
+# ================================
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
+*.iml
+*.iws
+*.ipr
 HELP.md
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
-.vscode/
-.DS_Store
-### Spring Boot ###
-target/
-build/
-### Maven ###
-!.mvn/wrapper/maven-wrapper.jar
-### IntelliJ IDEA ###
-.idea/
-*.iml
-*.iws
-*.ipr
-### Eclipse ###
-.classpath
-
-.settings/
-### NetBeans ###
-/nbproject/
-/dist/
-/nbdist/
-/.nb-gradle/
-### Visual Studio Code ###
-.vscode/
-### Gradle ###
-.gradle/
-/build/
-### Logs ###
-logs/
-*.log
-### Temporary Files ###
-*.tmp
-*.bak
-*.swp
-### IDE ###
-*.DS_Store
-.metadata/
-### IDE ###
-*.DS_Store
-.metadata/
-.env
