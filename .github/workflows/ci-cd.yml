@@ -227,11 +227,54 @@ jobs:
           kubectl -n ems set image deployment/auth-backend \
             auth-backend=emsdevopsacr.azurecr.io/ems-auth-backend:${{ github.sha }}
 
-      - name: Wait for rollouts
+
+      - name: Rollout frontend
+        id: frontend-rollout
+        continue-on-error: true
         run: |
           kubectl -n ems rollout status deployment/frontend --timeout=180s
+
+      - name: Rollout employee
+        id: employee-rollout
+        continue-on-error: true
+        run: |
           kubectl -n ems rollout status deployment/employee --timeout=180s
+
+      - name: Rollout auth backend
+        id: auth-rollout
+        continue-on-error: true
+        run: |
           kubectl -n ems rollout status deployment/auth-backend --timeout=180s
+
+      - name: Rollback frontend
+        if: steps.frontend-rollout.outcome == 'failure'
+        run: |
+          kubectl -n ems rollout undo deployment/frontend
+          kubectl -n ems rollout status deployment/frontend --timeout=180s
+
+      - name: Rollback employee
+        if: steps.employee-rollout.outcome == 'failure'
+        run: |
+          kubectl -n ems rollout undo deployment/employee
+          kubectl -n ems rollout status deployment/employee --timeout=180s
+
+      - name: Rollback auth backend
+        if: steps.auth-rollout.outcome == 'failure'
+        run: |
+          kubectl -n ems rollout undo deployment/auth-backend
+          kubectl -n ems rollout status deployment/auth-backend --timeout=180s
+
+      - name: Fail pipeline if deployment failed
+        if: |
+          steps.frontend-rollout.outcome == 'failure' ||
+          steps.employee-rollout.outcome == 'failure' ||
+          steps.auth-rollout.outcome == 'failure'
+        run: |
+          echo "One or more deployments failed."
+          echo "Failed deployments were automatically rolled back."
+          exit 1
+
+
 
       - name: Verify deployment
         run: |
