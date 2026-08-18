@@ -177,3 +177,63 @@ jobs:
         run: |
           docker push emsdevopsacr.azurecr.io/ems-auth-backend:${{ github.sha }}
           docker push emsdevopsacr.azurecr.io/ems-auth-backend:latest
+
+
+  # =========================
+  # 5. Deploy to AKS
+  # =========================
+  deploy:
+    name: Deploy to AKS
+    runs-on: ubuntu-latest
+
+    needs:
+      - docker-build
+
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Get AKS credentials
+        run: |
+          az aks get-credentials \
+            --resource-group ems-devops-rg \
+            --name ems-aks \
+            --overwrite-existing
+
+      - name: Deploy Git SHA images
+        run: |
+          kubectl -n ems set image deployment/frontend \
+            frontend=emsdevopsacr.azurecr.io/ems-frontend:${{ github.sha }}
+
+          kubectl -n ems set image deployment/employee \
+            employee=emsdevopsacr.azurecr.io/ems-employee:${{ github.sha }}
+
+          kubectl -n ems set image deployment/auth-backend \
+            auth-backend=emsdevopsacr.azurecr.io/ems-auth-backend:${{ github.sha }}
+
+      - name: Wait for rollouts
+        run: |
+          kubectl -n ems rollout status deployment/frontend --timeout=180s
+          kubectl -n ems rollout status deployment/employee --timeout=180s
+          kubectl -n ems rollout status deployment/auth-backend --timeout=180s
+
+      - name: Verify deployment
+        run: |
+          kubectl -n ems get deployments
+          kubectl -n ems get pods
