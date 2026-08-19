@@ -35,8 +35,22 @@ const EmployeeForm = ({ employee, onAddOrUpdateEmployee, setIsEditing }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onAddOrUpdateEmployee(formData);
-    setShowSnackbar(true); // Show snackbar when form is successfully submitted
+
+    if (employee) {
+      // Update existing employee
+      onAddOrUpdateEmployee(formData);
+    } else {
+      // Create new employee without an empty ID
+      const newEmployee = {
+        firstname: formData.firstname,
+        lastname: formData.lastname,
+        email: formData.email,
+      };
+
+      onAddOrUpdateEmployee(newEmployee);
+    }
+
+    setShowSnackbar(true);
   };
 
   const handleSnackbarClose = () => {
