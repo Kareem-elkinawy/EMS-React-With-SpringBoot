@@ -206,6 +206,34 @@ jobs:
             -t emsdevopsacr.azurecr.io/ems-auth-backend:latest \
             ./Backend
 
+      # Container vulnerability scanning
+      - name: Trivy - Scan Frontend image
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8
+        with:
+          image-ref: emsdevopsacr.azurecr.io/ems-frontend:${{ github.sha }}
+          format: table
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+
+      - name: Trivy - Scan Employee image
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8
+        with:
+          image-ref: emsdevopsacr.azurecr.io/ems-employee:${{ github.sha }}
+          format: table
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+
+      - name: Trivy - Scan Auth Backend image
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8
+        with:
+          image-ref: emsdevopsacr.azurecr.io/ems-auth-backend:${{ github.sha }}
+          format: table
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+
       - name: Push Frontend image
         run: |
           docker push emsdevopsacr.azurecr.io/ems-frontend:${{ github.sha }}
