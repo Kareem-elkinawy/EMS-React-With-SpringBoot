@@ -13,8 +13,12 @@ spec:
       labels:
         app: auth-backend
     spec:
+      securityContext:
+        runAsNonRoot: true
       containers:
         - name: auth-backend
+          securityContext:
+            allowPrivilegeEscalation: false
           image: emsdevopsacr.azurecr.io/ems-auth-backend:latest
           ports:
             - containerPort: 5001

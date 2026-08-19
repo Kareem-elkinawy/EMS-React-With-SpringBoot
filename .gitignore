@@ -67,3 +67,4 @@ logs/
 *.iws
 *.ipr
 HELP.md
+.metadata/

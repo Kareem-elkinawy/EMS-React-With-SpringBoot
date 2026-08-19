@@ -7,11 +7,18 @@ COPY src ./src
 
 RUN mvn clean package -DskipTests
 
+
 FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 
+RUN useradd --system --create-home --shell /usr/sbin/nologin appuser
+
 COPY --from=builder /app/target/*.jar app.jar
+
+RUN chown appuser:appuser /app/app.jar
+
+USER appuser
 
 EXPOSE 8080
 
