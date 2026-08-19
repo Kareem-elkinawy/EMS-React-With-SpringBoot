@@ -145,6 +145,8 @@ jobs:
       - name: Build Frontend image
         run: |
           docker build \
+            --build-arg VITE_EMPLOYEE_API_URL=/api \
+            --build-arg VITE_AUTH_API_URL=/auth \
             -t emsdevopsacr.azurecr.io/ems-frontend:${{ github.sha }} \
             -t emsdevopsacr.azurecr.io/ems-frontend:latest \
             ./src/Emp-React
