@@ -112,7 +112,47 @@ jobs:
         run: node --check server.mjs
 
   # =========================
-  # 4. Docker Build & Push
+  # 4. Security Scanning
+  # =========================
+  security:
+    name: Security - Secrets, SAST & Dependencies
+    runs-on: ubuntu-latest
+
+    needs:
+      - frontend
+      - employee
+      - auth-backend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+
+      # Secret scanning
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@dcedce43c6f43de0b836d1fe38946645c9c638dc
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Static Application Security Testing
+      - name: Semgrep SAST
+        uses: semgrep/semgrep-action@713efdd345f3035192eaa63f56867b88e63e4e5d
+        with:
+          config: auto
+
+      # Node.js dependency security
+      - name: Install Auth Backend dependencies
+        working-directory: Backend
+        run: npm ci
+
+      - name: npm audit
+        working-directory: Backend
+        run: npm audit --audit-level=high
+
+
+  # =========================
+  # 5. Docker Build & Push
   # =========================
   docker-build:
     name: Docker - Build & Push
@@ -122,6 +162,7 @@ jobs:
       - frontend
       - employee
       - auth-backend
+      - security
 
     permissions:
       id-token: write
@@ -182,7 +223,7 @@ jobs:
 
 
   # =========================
-  # 5. Deploy to AKS
+  # 6. Deploy to AKS
   # =========================
   deploy:
     name: Deploy to AKS
